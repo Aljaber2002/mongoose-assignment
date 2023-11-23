@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 export type ordersdetails = {
   productName: string;
   price: number;
@@ -21,5 +23,10 @@ export type userInformation = {
     city: string;
     country: string;
   };
-  orders: ordersdetails[];
+  orders?: ordersdetails[];
 };
+
+export interface methodUserModel extends Model<userInformation> {
+  // eslint-disable-next-line no-unused-vars
+  doesUserExist(id: string): Promise<boolean>;
+}
