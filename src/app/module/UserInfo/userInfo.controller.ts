@@ -80,17 +80,17 @@ export const controlldeleteSingleUser = async (req: Request, res: Response) => {
         message: 'User deleted successfully!',
         data: null,
       });
-    } else {
-      res.status(500).json({
-        success: false,
-        message: 'User not found',
-        error: {
-          code: 404,
-          description: 'User not found!',
-        },
-      });
     }
-  } catch (error) {
-    return error;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    // console.log(error.message);
+    res.status(500).json({
+      success: false,
+      message: `${error.message}`,
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
   }
 };

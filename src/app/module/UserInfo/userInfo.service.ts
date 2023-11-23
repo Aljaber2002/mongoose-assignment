@@ -30,7 +30,7 @@ export const getSingleUserFromdb = async (id: string) => {
 export const deleteSingleUser = async (id: string) => {
   const isExist = await UserModel.doesUserExist(id);
   if (!isExist) {
-    console.log(isExist);
+    throw new Error('user not found!');
   }
   const result = await UserModel.deleteOne({ userId: id });
   return result;
