@@ -1,8 +1,8 @@
 import express from 'express';
 import {
   controllGetAllUser,
-  controllGetSingleStudent,
   controllGetSingleUserOrdersCOllection,
+  controllGetSingleuser,
   controllOrderPriceSIngleUser,
   controllUpdateSingleUser,
   controllUserinfo,
@@ -13,9 +13,9 @@ import {
 export const userRouter = express.Router();
 userRouter.post('/', controllUserinfo);
 userRouter.get('/', controllGetAllUser);
-userRouter.get('/:id', controllGetSingleStudent);
-userRouter.delete('/:id', controlldeleteSingleUser);
-userRouter.put('/:id', controllUpdateSingleUser);
+userRouter.get('/:userId', controllGetSingleuser);
+userRouter.delete('/:userId', controlldeleteSingleUser);
+userRouter.put('/:userId', controllUpdateSingleUser);
 userRouter.get('/:userId/orders', controllGetSingleUserOrdersCOllection);
 userRouter.get('/:userId/orders/total-price', controllOrderPriceSIngleUser);
 userRouter.put('/:userId/orders', controllupdateOrderForUser);

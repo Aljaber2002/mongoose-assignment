@@ -64,10 +64,10 @@ export const controllGetAllUser = async (req: Request, res: Response) => {
     });
   }
 };
-export const controllGetSingleStudent = async (req: Request, res: Response) => {
+export const controllGetSingleuser = async (req: Request, res: Response) => {
   try {
-    const userid = req.params.id;
-    const result = await getSingleUserFromdb(userid);
+    const id = req.params.userId;
+    const result = await getSingleUserFromdb(id);
 
     if (result) {
       res.status(200).json({
@@ -90,7 +90,7 @@ export const controllGetSingleStudent = async (req: Request, res: Response) => {
 };
 export const controllUpdateSingleUser = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
+    const id = req.params.userId;
     const requireDoc = req.body.data;
     const { error } = userInformationSchemaUsingJoi.validate(requireDoc);
     if (error) {
@@ -119,7 +119,7 @@ export const controllUpdateSingleUser = async (req: Request, res: Response) => {
 };
 export const controlldeleteSingleUser = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
+    const id = req.params.userId;
     const result = await deleteSingleUser(id);
     if (result.deletedCount === 1) {
       res.status(200).json({
