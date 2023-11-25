@@ -212,11 +212,13 @@ export const controllupdateOrderForUser = async (
     }
     const id = req.params.userId;
     const result = await updateOrderForUser(id, expectedProduct);
-    res.status(200).json({
-      success: true,
-      message: 'order created successfully',
-      data: result,
-    });
+    if (result.modifiedCount >= 1) {
+      res.status(200).json({
+        success: true,
+        message: 'order created successfully',
+        data: null,
+      });
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     res.status(500).json({
