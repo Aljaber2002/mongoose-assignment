@@ -7,6 +7,7 @@ import {
   controllUpdateSingleUser,
   controllUserinfo,
   controlldeleteSingleUser,
+  controllupdateOrderForUser,
 } from './userInfo.controller';
 
 export const userRouter = express.Router();
@@ -17,3 +18,4 @@ userRouter.delete('/:id', controlldeleteSingleUser);
 userRouter.put('/:id', controllUpdateSingleUser);
 userRouter.get('/:userId/orders', controllGetSingleUserOrdersCOllection);
 userRouter.get('/:userId/orders/total-price', controllOrderPriceSIngleUser);
+userRouter.put('/:userId/orders', controllupdateOrderForUser);

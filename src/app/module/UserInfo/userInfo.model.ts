@@ -1,9 +1,11 @@
 import { Schema, model } from 'mongoose';
+import bcrypt from 'bcrypt';
 import {
   methodUserModel,
   ordersdetails,
   userInformation,
 } from './userInfo.interface';
+import config from '../../config';
 
 const ordersDetailsSchema = new Schema<ordersdetails>({
   productName: { type: String, required: true },
@@ -59,20 +61,15 @@ const userInformationSchema = new Schema<userInformation, methodUserModel>({
   },
   orders: { type: [ordersDetailsSchema] },
 });
-// hide passwordFeild when user want to creat userdoc
-// userInformationSchema.pre('save', function (next) {
-//   this.set('password', undefined);
 
-//   next();
-// });
 userInformationSchema.methods.toJSON = function () {
   const userObject = this.toObject();
 
   delete userObject.password;
   return userObject;
 };
-userInformationSchema.pre('save', function (next) {
-  this.password = `${this.password}`;
+userInformationSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(this.password, Number(config.round));
   next();
 });
 // creating static method------

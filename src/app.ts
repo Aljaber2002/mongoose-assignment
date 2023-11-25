@@ -7,7 +7,10 @@ app.use(express.json());
 app.use('/api/users', userRouter);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.send({
+    success: true,
+    message: 'Assignment-2 is running',
+  });
 });
 
 export default app;

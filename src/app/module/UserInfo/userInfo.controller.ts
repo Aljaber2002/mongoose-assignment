@@ -6,12 +6,28 @@ import {
   getSingleUserFromdb,
   getSingleUserOrderCollection,
   totalPriceOfOrdersSingleUser,
+  updateOrderForUser,
   updateSingleStudentfromDb,
 } from './userInfo.service';
+import {
+  ordersDetailsSchemaUsingJoi,
+  userInformationSchemaUsingJoi,
+} from './validationUsingJoi';
 
 export const controllUserinfo = async (req: Request, res: Response) => {
   try {
-    const userdata = req.body.data;
+    const userdata = req?.body?.data;
+    const { error } = userInformationSchemaUsingJoi.validate(userdata);
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: 'unfortunately user not created .Message from joi!!',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
     const result = await creatUserIndb(userdata);
     res.status(200).send({
       success: true,
@@ -19,7 +35,7 @@ export const controllUserinfo = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       success: false,
       message: 'unfortunately user not created',
       error: {
@@ -34,13 +50,13 @@ export const controllGetAllUser = async (req: Request, res: Response) => {
     const result = await getAllUserfromdb();
     res.status(200).json({
       success: true,
-      message: 'User created successfully!',
+      message: 'User fetched successfully!',
       data: result,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'unfortunately user not created',
+      message: 'unfortunately no user found!',
       error: {
         code: 404,
         description: 'User not found!',
@@ -59,24 +75,30 @@ export const controllGetSingleStudent = async (req: Request, res: Response) => {
         message: 'User fetched successfully!',
         data: result,
       });
-    } else {
-      res.status(500).send({
-        success: false,
-        message: 'User not found',
-        error: {
-          code: 404,
-          description: 'User not found!',
-        },
-      });
     }
-  } catch (error) {
-    console.log(error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).send({
+      success: false,
+      message: `${error.message}`,
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
   }
 };
 export const controllUpdateSingleUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const requireDoc = req.body.data;
+    const { error } = userInformationSchemaUsingJoi.validate(requireDoc);
+    if (error) {
+      res.status(500).send({
+        success: false,
+        message: 'invalid information.message from joi!',
+      });
+    }
     const result = await updateSingleStudentfromDb(id, requireDoc);
     res.status(200).json({
       success: true,
@@ -153,14 +175,47 @@ export const controllOrderPriceSIngleUser = async (
 ) => {
   try {
     const id = req.params.userId;
-    const result = await totalPriceOfOrdersSingleUser(id);
-    // console.log(result, 'test');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result: any = await totalPriceOfOrdersSingleUser(id);
+
     res.status(200).json({
       success: true,
       message: 'Total price calculated successfully!',
       data: {
         totalPrice: `${result.totalPrice}`,
       },
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: `${error.message}`,
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+export const controllupdateOrderForUser = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const expectedProduct = req.body.data;
+    const { error } = ordersDetailsSchemaUsingJoi.validate(expectedProduct);
+    if (error) {
+      res.status(500).send({
+        success: false,
+        message: 'invalid information!! message from joi!',
+      });
+    }
+    const id = req.params.userId;
+    const result = await updateOrderForUser(id, expectedProduct);
+    res.status(200).json({
+      success: true,
+      message: 'order created successfully',
+      data: result,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {

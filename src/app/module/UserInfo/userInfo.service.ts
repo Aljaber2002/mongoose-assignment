@@ -16,13 +16,12 @@ export const getAllUserfromdb = async () => {
   return result;
 };
 export const getSingleUserFromdb = async (id: string) => {
-  //   console.log(typeof id);
   const result = await UserModel.findOne({ userId: id }).select({
     password: 0,
   });
   const isUserExist = await UserModel.doesUserExist(id);
   if (!isUserExist) {
-    console.log(isUserExist);
+    throw new Error('user not found!');
   }
 
   return result;
@@ -88,4 +87,21 @@ export const totalPriceOfOrdersSingleUser = async (id: string) => {
   });
 
   return { totalPrice: totalAmount };
+};
+export const updateOrderForUser = async (
+  id: string,
+  product: ordersdetails,
+) => {
+  const isUserExist = await UserModel.doesUserExist(id);
+  const singleUser: userInformation | null = await UserModel.findOne({
+    userId: id,
+  });
+  if (singleUser?.orders?.length && isUserExist) {
+    const result = UserModel.updateOne(
+      { userId: id },
+      { $push: { orders: product } },
+    );
+    return result;
+  }
+  throw new Error(`user not found!`);
 };
