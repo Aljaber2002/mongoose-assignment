@@ -25,3 +25,29 @@ export const userInformationSchemaUsingJoi = Joi.object({
   }).required(),
   orders: Joi.array().items(ordersDetailsSchemaUsingJoi),
 });
+
+export const UpdateordersDetailsSchemaUsingJoi = Joi.object({
+  productName: Joi.string().optional(),
+  price: Joi.number().optional(),
+  quantity: Joi.number().optional(),
+});
+
+export const UpdateuserInformationSchemaUsingJoi = Joi.object({
+  userId: Joi.number().optional(),
+  username: Joi.string().optional(),
+  password: Joi.string().optional(),
+  fullName: Joi.object({
+    firstName: Joi.string().optional(),
+    lastName: Joi.string().optional(),
+  }).optional(),
+  age: Joi.number().optional(),
+  email: Joi.string().email().optional(),
+  isActive: Joi.boolean().optional(),
+  hobbies: Joi.array().items(Joi.string()).optional(),
+  address: Joi.object({
+    street: Joi.string().optional(),
+    city: Joi.string().optional(),
+    country: Joi.string().optional(),
+  }).optional(),
+  orders: Joi.array().items(UpdateordersDetailsSchemaUsingJoi).optional(),
+});

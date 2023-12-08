@@ -10,13 +10,14 @@ import {
   updateSingleStudentfromDb,
 } from './userInfo.service';
 import {
+  UpdateuserInformationSchemaUsingJoi,
   ordersDetailsSchemaUsingJoi,
   userInformationSchemaUsingJoi,
 } from './validationUsingJoi';
 
 export const controllUserinfo = async (req: Request, res: Response) => {
   try {
-    const userdata = req?.body?.data;
+    const userdata = req.body;
     const { error } = userInformationSchemaUsingJoi.validate(userdata);
     if (error) {
       res.status(500).json({
@@ -39,6 +40,7 @@ export const controllUserinfo = async (req: Request, res: Response) => {
       success: false,
       message: 'unfortunately user not created',
       error: {
+        message: error,
         code: 404,
         description: 'User not found!',
       },
@@ -91,8 +93,8 @@ export const controllGetSingleuser = async (req: Request, res: Response) => {
 export const controllUpdateSingleUser = async (req: Request, res: Response) => {
   try {
     const id = req.params.userId;
-    const requireDoc = req.body.data;
-    const { error } = userInformationSchemaUsingJoi.validate(requireDoc);
+    const requireDoc = req.body;
+    const { error } = UpdateuserInformationSchemaUsingJoi.validate(requireDoc);
     if (error) {
       res.status(500).send({
         success: false,
@@ -202,7 +204,7 @@ export const controllupdateOrderForUser = async (
   res: Response,
 ) => {
   try {
-    const expectedProduct = req.body.data;
+    const expectedProduct = req.body;
     const { error } = ordersDetailsSchemaUsingJoi.validate(expectedProduct);
     if (error) {
       res.status(500).send({

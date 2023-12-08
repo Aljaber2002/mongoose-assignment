@@ -14,8 +14,9 @@ export const userRouter = express.Router();
 userRouter.post('/', controllUserinfo);
 userRouter.get('/', controllGetAllUser);
 userRouter.get('/:userId', controllGetSingleuser);
-userRouter.delete('/:userId', controlldeleteSingleUser);
 userRouter.put('/:userId', controllUpdateSingleUser);
+userRouter.delete('/:userId', controlldeleteSingleUser);
+userRouter.put('/:userId/orders', controllupdateOrderForUser);
+
 userRouter.get('/:userId/orders', controllGetSingleUserOrdersCOllection);
 userRouter.get('/:userId/orders/total-price', controllOrderPriceSIngleUser);
-userRouter.put('/:userId/orders', controllupdateOrderForUser);

@@ -18,6 +18,7 @@ export const getAllUserfromdb = async () => {
 export const getSingleUserFromdb = async (id: string) => {
   const result = await UserModel.findOne({ userId: id }).select({
     password: 0,
+    orders: 0,
   });
   const isUserExist = await UserModel.doesUserExist(id);
   if (!isUserExist) {
@@ -28,7 +29,7 @@ export const getSingleUserFromdb = async (id: string) => {
 };
 export const updateSingleStudentfromDb = async (
   id: string,
-  requireDoc: userInformation,
+  requireDoc: Partial<userInformation>,
 ) => {
   const isUserExist = await UserModel.doesUserExist(id);
 
@@ -50,6 +51,25 @@ export const deleteSingleUser = async (id: string) => {
   const result = await UserModel.deleteOne({ userId: id });
   return result;
 };
+export const updateOrderForUser = async (
+  id: string,
+  product: ordersdetails,
+) => {
+  const isUserExist = await UserModel.doesUserExist(id);
+  const singleUser: userInformation | null = await UserModel.findOne({
+    userId: id,
+  });
+  if (singleUser?.orders && isUserExist) {
+    const result = UserModel.updateOne(
+      { userId: id },
+      { $push: { orders: product } },
+    );
+    // singleUser.orders = [];
+    return result;
+  }
+  throw new Error(`user not found!`);
+};
+
 export const getSingleUserOrderCollection = async (id: string) => {
   const isUserExist = await UserModel.doesUserExist(id);
 
@@ -87,21 +107,4 @@ export const totalPriceOfOrdersSingleUser = async (id: string) => {
   });
 
   return { totalPrice: totalAmount };
-};
-export const updateOrderForUser = async (
-  id: string,
-  product: ordersdetails,
-) => {
-  const isUserExist = await UserModel.doesUserExist(id);
-  const singleUser: userInformation | null = await UserModel.findOne({
-    userId: id,
-  });
-  if (singleUser?.orders?.length && isUserExist) {
-    const result = UserModel.updateOne(
-      { userId: id },
-      { $push: { orders: product } },
-    );
-    return result;
-  }
-  throw new Error(`user not found!`);
 };
